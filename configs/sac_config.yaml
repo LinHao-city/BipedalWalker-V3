@@ -1,0 +1,60 @@
+# SAC (Soft Actor-Critic) Configuration
+# Soft Actor-Critic Algorithm Settings
+
+algorithm:
+  name: "SAC"
+  type: "off_policy"
+  description: "Soft Actor-Critic with maximum entropy reinforcement learning"
+
+# Hyperparameters
+hyperparameters:
+  learning_rate: 4e-4
+  weight_decay: 0.0
+  gamma: 0.98          # Discount factor
+  alpha: 0.01          # Entropy regularization term
+  tau: 0.01           # Soft update coefficient
+  batch_size: 64
+  buffer_size: 500000
+  update_frequency: 1  # Update every N steps
+
+# Network Architecture
+network:
+  actor:
+    hidden_sizes: [256, 256]
+    activation: "relu"
+    layer_norm: true
+    stochastic: true
+
+  critic:
+    hidden_sizes: [256, 256]
+    activation: "relu"
+    layer_norm: true
+    num_critics: 2      # Twin critics for SAC
+
+# Training Configuration
+training:
+  max_episodes: 10000
+  max_steps_per_episode: 2000
+  save_frequency: 100   # Save model every N episodes
+  eval_frequency: 50    # Evaluate every N episodes
+
+# Exploration
+exploration:
+  type: "parameter_noise"
+  initial_noise: 0.1
+  final_noise: 0.01
+  noise_decay: 0.995
+
+# Environment
+environment:
+  name: "BipedalWalkerHardcore-v3"
+  frame_skip: 2
+  normalize_observations: true
+  clip_rewards: false
+
+# Logging
+logging:
+  log_level: "INFO"
+  save_video: false
+  tensorboard: true
+  wandb: false

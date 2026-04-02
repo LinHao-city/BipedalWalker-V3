@@ -1,0 +1,80 @@
+# Environment Configuration
+# BipedalWalker Environment Settings
+
+environment:
+  # Environment Selection
+  classic:
+    name: "BipedalWalker-v3"
+    description: "Standard BipedalWalker environment"
+    difficulty: "easy"
+
+  hardcore:
+    name: "BipedalWalkerHardcore-v3"
+    description: "BipedalWalker with challenging terrain and obstacles"
+    difficulty: "hard"
+
+# Environment Preprocessing
+preprocessing:
+  frame_skip: 2         # Skip frames for efficiency
+  frame_stack: null     # No frame stacking, use history instead
+  grayscale: false      # Keep RGB channels
+  resize: null          # No resizing needed
+
+  # Observation Processing
+  normalize:
+    enabled: true
+    method: "running_stats"  # Options: "fixed", "running_stats", "none"
+
+  # Reward Processing
+  reward_processing:
+    clip_rewards: false
+    reward_scale: 1.0
+    normalize_rewards: false
+
+# Environment Parameters
+parameters:
+  max_episode_steps: 2000
+  seed: null
+
+  # Physics Engine
+  physics:
+    gravity: -10.0
+    time_step: 0.016    # ~60 FPS, halved to 30 FPS with skip=2
+
+  # Rendering
+  rendering:
+    enabled: false      # Disable during training for speed
+    mode: "human"       # Options: "human", "rgb_array"
+    width: 640
+    height: 480
+
+# History Configuration (for sequential models)
+history:
+  enabled: false        # Enable for LSTM/Transformer models
+  length: 12           # Number of past observations to include
+
+  # History Buffer Configuration
+  buffer:
+    max_length: 12
+    include_actions: true
+    include_rewards: false
+
+# Evaluation Settings
+evaluation:
+  num_episodes: 100
+  render: true
+  deterministic: true
+  save_video: false
+
+# Safety Constraints
+safety:
+  action_clipping:
+    enabled: true
+    low: -1.0
+    high: 1.0
+
+  # Early Termination Conditions
+  early_termination:
+    torso_height_threshold: 0.3
+    angle_threshold: 1.0
+    joint_limit_threshold: null

@@ -1,0 +1,67 @@
+# TD3 (Twin Delayed Deep Deterministic Policy Gradient) Configuration
+# TD3 Algorithm Settings
+
+algorithm:
+  name: "TD3"
+  type: "off_policy"
+  description: "Twin Delayed Deep Deterministic Policy Gradient with target policy smoothing"
+
+# Hyperparameters
+hyperparameters:
+  learning_rate: 4e-4
+  weight_decay: 0.0
+  gamma: 0.98          # Discount factor
+  tau: 0.01           # Soft update coefficient
+  batch_size: 64
+  buffer_size: 500000
+  update_frequency: 2  # Update every N steps
+  policy_delay: 2      # Delay policy updates
+
+# Network Architecture
+network:
+  actor:
+    hidden_sizes: [256, 256]
+    activation: "relu"
+    layer_norm: true
+    output_activation: "tanh"
+
+  critic:
+    hidden_sizes: [256, 256]
+    activation: "relu"
+    layer_norm: true
+    num_critics: 2      # Twin critics for TD3
+
+# Training Configuration
+training:
+  max_episodes: 10000
+  max_steps_per_episode: 2000
+  save_frequency: 100   # Save model every N episodes
+  eval_frequency: 50    # Evaluate every N episodes
+
+# Exploration
+exploration:
+  type: "ornstein_uhlenbeck"
+  noise_scale: 0.1
+  noise_decay: 0.995
+  theta: 0.15
+  sigma: 0.2
+
+# TD3 Specific Parameters
+td3_params:
+  target_noise: 0.2
+  target_noise_clip: 0.5
+  policy_noise: 0.2
+
+# Environment
+environment:
+  name: "BipedalWalkerHardcore-v3"
+  frame_skip: 2
+  normalize_observations: true
+  clip_rewards: false
+
+# Logging
+logging:
+  log_level: "INFO"
+  save_video: false
+  tensorboard: true
+  wandb: false
