@@ -13,7 +13,7 @@
 
 <img src="evaluation_results/plots/training_plot.png" width="720" alt="Training Curves">
 
-[Key Results](#-key-results) · [Quick Start](#-quick-start) · [Architecture](#-neural-network-architectures) · [Reproduce](#-training) · [Docs](#-documentation)
+[Key Results](#-key-results) · [Demos](#-visual-demonstrations) · [Quick Start](#-quick-start) · [Architecture](#-neural-network-architectures) · [Reproduce](#-training) · [Docs](#-documentation)
 
 </div>
 
@@ -66,6 +66,154 @@ BipedalWalkerHardcore-v3 is a **partially observable** continuous control proble
 
 ---
 
+## Visual Demonstrations
+
+### Agent Behavior Across Terrain Types
+
+Each architecture handles obstacles differently. The images below compare **FeedForward**, **LSTM-12**, and **Transformer-12** (all SAC) on three hardcore terrain challenges:
+
+<table>
+<tr>
+<th></th>
+<th align="center">FeedForward</th>
+<th align="center">LSTM-12</th>
+<th align="center">Transformer-12</th>
+</tr>
+<tr>
+<td><b>Hurdles</b></td>
+<td><img src="paper/figures/bipedal/anim/ff-hurdle.png" width="240"></td>
+<td><img src="paper/figures/bipedal/anim/lstm-12-hurdle.png" width="240"></td>
+<td><img src="paper/figures/bipedal/anim/trsf-12-hurdle.png" width="240"></td>
+</tr>
+<tr>
+<td><b>Pitfalls</b></td>
+<td><img src="paper/figures/bipedal/anim/ff-pitfall.png" width="240"></td>
+<td><img src="paper/figures/bipedal/anim/lstm-12-pitfall.png" width="240"></td>
+<td><img src="paper/figures/bipedal/anim/trsf-12-pitfall.png" width="240"></td>
+</tr>
+<tr>
+<td><b>Stairs</b></td>
+<td><img src="paper/figures/bipedal/anim/ff-stairs.png" width="240"></td>
+<td><img src="paper/figures/bipedal/anim/lstm-12-stairs.png" width="240"></td>
+<td><img src="paper/figures/bipedal/anim/trsf-12-stairs.png" width="240"></td>
+</tr>
+</table>
+
+> Temporal models (LSTM, Transformer) show smoother gait and better obstacle anticipation — the agent "remembers" what terrain lies ahead using past observations.
+
+### Walking Demos (GIF)
+
+<table>
+<tr>
+<th colspan="4" align="center">SAC Algorithm</th>
+</tr>
+<tr>
+<td align="center"><b>FeedForward</b></td>
+<td align="center"><b>LSTM-6</b></td>
+<td align="center"><b>LSTM-12</b></td>
+<td align="center"><b>Transformer-12</b></td>
+</tr>
+<tr>
+<td><img src="results/videos/video/ff-sac.gif" width="200"></td>
+<td><img src="results/videos/video/lstm-6-sac.gif" width="200"></td>
+<td><img src="results/videos/video/lstm-12-sac.gif" width="200"></td>
+<td><img src="results/videos/video/trsf-12-sac.gif" width="200"></td>
+</tr>
+<tr>
+<th colspan="4" align="center">TD3 Algorithm</th>
+</tr>
+<tr>
+<td align="center"><b>FeedForward</b></td>
+<td align="center"><b>LSTM-6</b></td>
+<td align="center"><b>Transformer-6</b></td>
+<td></td>
+</tr>
+<tr>
+<td><img src="results/videos/video/ff-td3.gif" width="200"></td>
+<td><img src="results/videos/video/lstm-6-td3.gif" width="200"></td>
+<td><img src="results/videos/video/trsf-6-td3.gif" width="200"></td>
+<td></td>
+</tr>
+</table>
+
+### Environment Overview
+
+<table>
+<tr>
+<td align="center"><b>BipedalWalker-v3 (Classic)</b></td>
+<td align="center"><b>BipedalWalkerHardcore-v3</b></td>
+<td align="center"><b>Agent Anatomy</b></td>
+</tr>
+<tr>
+<td><img src="paper/figures/bipedal/classic.png" width="260"></td>
+<td><img src="paper/figures/bipedal/hardcore.png" width="260"></td>
+<td><img src="paper/figures/bipedal/bpedal_annotated.png" width="260"></td>
+</tr>
+</table>
+
+### Training Curves (Per Model)
+
+<details>
+<summary><b>Click to expand individual training curves</b></summary>
+
+<table>
+<tr>
+<td align="center"><b>SAC + FeedForward</b></td>
+<td align="center"><b>SAC + LSTM-6</b></td>
+<td align="center"><b>SAC + LSTM-12</b></td>
+</tr>
+<tr>
+<td><img src="results/plots/ff-sac.png" width="260"></td>
+<td><img src="results/plots/lstm-6-sac.png" width="260"></td>
+<td><img src="results/plots/lstm-12-sac.png" width="260"></td>
+</tr>
+<tr>
+<td align="center"><b>SAC + Transformer-6</b></td>
+<td align="center"><b>SAC + Transformer-12</b></td>
+<td align="center"><b>TD3 + FeedForward</b></td>
+</tr>
+<tr>
+<td><img src="results/plots/trsf-6-sac.png" width="260"></td>
+<td><img src="results/plots/trsf-12-sac.png" width="260"></td>
+<td><img src="results/plots/ff-td3.png" width="260"></td>
+</tr>
+<tr>
+<td align="center"><b>TD3 + LSTM-6</b></td>
+<td align="center"><b>TD3 + Transformer-6</b></td>
+<td></td>
+</tr>
+<tr>
+<td><img src="results/plots/lstm-6-td3.png" width="260"></td>
+<td><img src="results/plots/trsf-6-td3.png" width="260"></td>
+<td></td>
+</tr>
+</table>
+
+</details>
+
+### Cumulative Score & Stability Analysis
+
+<table>
+<tr>
+<td align="center"><b>SAC — Cumulative Scores</b></td>
+<td align="center"><b>TD3 — Cumulative Scores</b></td>
+</tr>
+<tr>
+<td><img src="results/plots/SCT_SAC_RFFNN_LSTM-6_TRSF-6_LSTM-12_TRSF-12.png" width="400"></td>
+<td><img src="results/plots/SCT_TD3_RFFNN_LSTM-6_TRSF-6.png" width="400"></td>
+</tr>
+<tr>
+<td align="center"><b>SAC — Score Std Dev</b></td>
+<td align="center"><b>TD3 — Score Std Dev</b></td>
+</tr>
+<tr>
+<td><img src="results/plots/STD_SAC_RFFNN_LSTM-6_TRSF-6_LSTM-12_TRSF-12.png" width="400"></td>
+<td><img src="results/plots/STD_TD3_RFFNN_LSTM-6_TRSF-6.png" width="400"></td>
+</tr>
+</table>
+
+---
+
 ## Neural Network Architectures
 
 This project implements a **plug-and-play architecture system** — each encoder can be combined with any RL algorithm:
@@ -95,7 +243,7 @@ Observation → [Encoder] → Latent → Actor (→ Action)
 ### Installation
 
 ```bash
-git clone https://github.com/<your-username>/BipedalWalker-V3.git
+git clone https://github.com/LinHao-city/BipedalWalker-V3.git
 cd BipedalWalker-V3
 pip install -r requirements.txt
 ```
@@ -175,6 +323,39 @@ python main_script.py -f train -r sac -m bilstm -hl 12
 | `-a` | float | `0.01` | SAC entropy coefficient α |
 
 Models are saved every 200 episodes to `models/{algorithm}/{env_type}/`.
+
+---
+
+## Pretrained Models
+
+The best checkpoint for each of the 8 model configurations is included in this repository, so you can **directly run evaluation and video recording without training from scratch**.
+
+| Model | Algorithm | Checkpoint | Path |
+|-------|:---------:|:----------:|------|
+| SAC_FeedForward | SAC | ep7600 | `models/sac/hardcore/ep7600_ff_*` |
+| SAC_LSTM-6 | SAC | ep7600 | `models/sac/hardcore-6/ep7600_lstm_*` |
+| SAC_LSTM-12 | SAC | ep7200 | `models/sac/hardcore-12/ep7200_lstm_*` |
+| SAC_Transformer-6 | SAC | ep6800 | `models/sac/hardcore-6/ep6800_trsf_*` |
+| SAC_Transformer-12 | SAC | ep6000 | `models/sac/hardcore-12/ep6000_trsf_*` |
+| TD3_FeedForward | TD3 | ep6600 | `models/td3/hardcore/ep6600_ff_*` |
+| TD3_LSTM-6 | TD3 | ep7000 | `models/td3/hardcore-6/ep7000_lstm_*` |
+| TD3_Transformer-6 | TD3 | ep6400 | `models/td3/hardcore-6/ep6400_trsf_*` |
+
+Each model includes 3 files: `actor.pth` + `critic_1.pth` + `critic_2.pth` (24 files total, ~5.5 MB).
+
+> **Note:** Only the best-performing checkpoint per configuration is included. Intermediate checkpoints (960 files, ~227 MB) are excluded via `.gitignore` to keep the repository lightweight. To regenerate all checkpoints, run the full training pipeline (~8000 episodes per model, see [Training](#-training)).
+
+### Reproducing Results
+
+| Task | Command | Requires Training? |
+|------|---------|:------------------:|
+| Evaluate a model | `python main_script.py -f test -r sac -m lstm -hl 12` | No |
+| Record demo videos | `python scripts/visualization/record_original_wrappers_fixed.py` | No |
+| Generate training plots | `python scripts/visualization/simple_plot.py` | No (uses logs) |
+| Generate performance tables | `python scripts/visualization/generate_tables.py` | No (uses logs) |
+| Train from scratch | `python main_script.py -f train -r sac -m lstm -hl 12` | Yes (~4h per model on GPU) |
+
+All training logs (`results/logs/`) are included, so visualization scripts work out of the box.
 
 ---
 
