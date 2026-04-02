@@ -8,6 +8,8 @@
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
 [![Gymnasium](https://img.shields.io/badge/Gymnasium-0.28-0081A5?logo=openaigym&logoColor=white)](https://gymnasium.farama.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/LinHao-city/BipedalWalker-V3?style=flat&logo=github)](https://github.com/LinHao-city/BipedalWalker-V3/stargazers)
+[![Forks](https://img.shields.io/github/forks/LinHao-city/BipedalWalker-V3?style=flat&logo=github)](https://github.com/LinHao-city/BipedalWalker-V3/network/members)
 
 **A systematic benchmark of SAC & TD3 algorithms combined with FeedForward, LSTM, and Transformer architectures for solving BipedalWalkerHardcore-v3 — one of the most challenging continuous control tasks in OpenAI Gymnasium.**
 
@@ -590,6 +592,41 @@ If you use this codebase in your research, please consider citing:
 - [Lillicrap et al., 2015 — DDPG](https://arxiv.org/abs/1509.02971)
 - [Vaswani et al., 2017 — Attention Is All You Need](https://arxiv.org/abs/1706.03762)
 - [Xiong et al., 2020 — On Layer Normalization in Transformer](https://arxiv.org/abs/2002.04745)
+
+---
+
+## Contributing
+
+Contributions are welcome! Here are some ways you can help:
+
+- **Report bugs** — Open an [Issue](https://github.com/LinHao-city/BipedalWalker-V3/issues) if you find problems
+- **Add new architectures** — The plug-and-play encoder system makes it easy (see `src/architectures/`)
+- **Improve exploration** — Try new noise strategies or curiosity-driven methods
+- **Extend to new environments** — Adapt the framework to other Gymnasium tasks
+- **Optimize training** — Implement prioritized replay, multi-step returns, or distributional RL
+
+Feel free to submit a Pull Request!
+
+---
+
+## Support This Project
+
+If you find this project useful for your research or learning, please consider:
+
+- **Star** this repo to help others discover it
+- **Fork** it to build your own experiments
+- **Watch** for updates on new architectures and results
+- **Share** it with your colleagues and on social media
+
+<div align="center">
+
+**If this project helped you, a star would be greatly appreciated!**
+
+<a href="https://github.com/LinHao-city/BipedalWalker-V3/stargazers"><img src="https://img.shields.io/github/stars/LinHao-city/BipedalWalker-V3?style=social" alt="GitHub Stars"></a>
+<a href="https://github.com/LinHao-city/BipedalWalker-V3/network/members"><img src="https://img.shields.io/github/forks/LinHao-city/BipedalWalker-V3?style=social" alt="GitHub Forks"></a>
+<a href="https://github.com/LinHao-city/BipedalWalker-V3/issues"><img src="https://img.shields.io/github/issues/LinHao-city/BipedalWalker-V3?style=social" alt="GitHub Issues"></a>
+
+</div>
 
 ---
 
