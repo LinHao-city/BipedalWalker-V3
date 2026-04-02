@@ -1,230 +1,335 @@
-# 🤖 BipedalWalker Reinforcement Learning Project
+<div align="center">
 
-[![Python](https://img.shields.io/badge/Python-3.6%2B-blue.svg)](https://www.python.org/downloads/)
-[![PyTorch](https://img.shields.io/badge/PyTorch-1.8%2B-red.svg)](https://pytorch.org/)
-[![Gymnasium](https://img.shields.io/badge/Gymnasium-0.28%2B-green.svg)](https://gymnasium.farama.org/)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+# BipedalWalker-V3
 
-一个基于深度强化学习的双足步行机器人控制项目，使用SAC和TD3算法解决BipedalWalker环境挑战。
+### Deep Reinforcement Learning for Bipedal Locomotion on Hardcore Terrain
 
-## 📋 项目概述
+[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![Gymnasium](https://img.shields.io/badge/Gymnasium-0.28-0081A5?logo=openaigym&logoColor=white)](https://gymnasium.farama.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-本项目实现了一个完整的强化学习系统，专门用于解决**BipedalWalker-v3**和**BipedalWalkerHardcore-v3**环境。项目采用了较为前沿的深度强化学习算法和创新的神经网络架构，实现了在复杂地形下的双足行走控制。
+**A systematic benchmark of SAC & TD3 algorithms combined with FeedForward, LSTM, and Transformer architectures for solving BipedalWalkerHardcore-v3 — one of the most challenging continuous control tasks in OpenAI Gymnasium.**
 
-### 🎯 核心目标
-- 解决BipedalWalkerHardcore-v3环境的挑战
-- 比较不同强化学习算法的性能表现
-- 探索时序建模在机器人控制中的应用
-- 提供可复现的实验结果和详细的实现
+<img src="evaluation_results/plots/training_plot.png" width="720" alt="Training Curves">
 
-## ✨ 项目特色
+[Key Results](#-key-results) · [Quick Start](#-quick-start) · [Architecture](#-neural-network-architectures) · [Reproduce](#-training) · [Docs](#-documentation)
 
-### 🧠 先进的强化学习算法
-- **SAC (Soft Actor-Critic)**: 基于最大熵的演员-评论家算法
-- **TD3 (Twin Delayed Deep Deterministic Policy Gradient)**: 改进的确定性策略梯度算法
+</div>
 
-### 🏗️ 创新的神经网络架构
-- **FeedForward网络**: 基础前馈神经网络架构
-- **Transformer模型**: 利用注意力机制处理时序信息
-- **LSTM**: 长短期记忆网络处理历史观察
-- **时序建模**: 支持6步或12步历史观察输入
+---
 
-## 📁 项目结构
+## Why This Project?
 
-```
-BipedalWalker-V3/
-├── 📂 src/                          # 核心源代码（模型训练）
-│   ├── 📄 agents/                    # 强化学习智能体
-│   │   ├── sac_agent.py             # SAC算法实现
-│   │   └── td3_agent.py             # TD3算法实现
-│   ├── 📄 architectures/            # 神经网络架构
-│   │   ├── feedforward.py           # 前馈网络
-│   │   ├── transformer.py           # Transformer模型
-│   │   └── lstm.py                  # LSTM模型
-│   ├── 📄 utils/                     # 工具模块
-│   │   ├── replay_buffer.py         # 经验回放缓冲区
-│   │   └── noise.py                 # 噪声策略
-│   ├── 📄 training.py               # 训练逻辑
-│   └── 📄 evaluation.py             # 评估逻辑
-├── 📂 scripts/                      # 现代化脚本
-│   └── 📂 visualization/            # 可视化和生成工具
-│       ├── simple_plot.py           # 主训练曲线图生成
-│       ├── plot_results.py          # 专门对比图生成
-│       ├── generate_tables.py       # 性能表格生成
-│       ├── record_ff_final.py       # FeedForward模型视频生成
-│       └── record_original_wrappers_fixed.py # 全模型视频生成
-├── 📂 models/                       # 预训练模型
-├── 📂 results/                      # 原始实验结果
-│   ├── 📄 logs/                     # 训练日志
-│   └── 📄 plots/                    # 原始结果图表
-├── 📂 evaluation_results/           # 现代化评估结果
-│   ├── 📄 plots/                    # 生成的对比图表
-│   ├── 📄 tables/                   # 性能统计表格
-│   └── 📄 videos/                   # 生成的视频文件
-├── 📄 requirements.txt              # 依赖包列表
-├── 📄 main_script.py                # 训练脚本
-└── 📄 README.md                    # 项目说明
-```
+BipedalWalkerHardcore-v3 is a **partially observable** continuous control problem featuring stairs, pitfalls, and stumps — demanding both robust low-level motor control and high-level terrain adaptation. Most open-source solutions only use basic MLP policies. This project goes further by:
 
-## 🚀 快速开始
+- **Comparing 2 state-of-the-art algorithms** (SAC, TD3) across **5 neural network architectures** (FeedForward, MLP, LSTM, BiLSTM, Transformer)
+- **Investigating temporal modeling**: Does feeding the agent a history of observations help? How many steps? Which encoder works best?
+- **Providing 8 fully trained model configurations** with complete training logs, evaluation videos, and reproducible scripts
 
-### 环境要求
+> **Best result: 303.6** (SAC + Transformer-12), surpassing the environment's "solved" threshold of 300.
 
-直接安装项目依赖：
-```bash
-pip install -r requirements.txt
-```
+---
 
-### 📹 视频生成（推荐使用）
+## Key Results
 
-生成所有模型的H264 MP4视频：
+### Performance Ranking
 
-#### 生成所有模型视频
-```bash
-# 生成所有8个模型（16个视频文件，每个模型2个episodes）
-python scripts/visualization/record_original_wrappers_fixed.py
-```
-
-#### 生成特定类型模型视频
-```bash
-# 生成FeedForward模型视频
-python scripts/visualization/record_ff_final.py
-
-# 生成LSTM和Transformer模型视频
-python scripts/visualization/record_original_wrappers_fixed.py
-```
-
-### 📊 数据分析和可视化
-
-#### 生成主要训练曲线图
-```bash
-# 生成包含8种模型的完整训练对比图
-python scripts/visualization/simple_plot.py
-```
-
-#### 生成专门对比分析图
-```bash
-# 生成所有专门的对比图
-python scripts/visualization/plot_results.py
-
-# 或生成特定类型的对比图
-python scripts/visualization/plot_results.py --sac_vs_td3      # SAC vs TD3算法对比
-python scripts/visualization/plot_results.py --sac_archs      # SAC架构对比
-python scripts/visualization/plot_results.py --td3_archs      # TD3架构对比
-```
-
-#### 生成性能统计表格
-```bash
-# 生成完整的性能对比表格（CSV和Markdown格式）
-python scripts/visualization/generate_tables.py
-```
-
-### 🏃‍♂️ 模型训练
-
-模型训练使用代码：
-```bash
-# 训练SAC + FeedForward
-python main_script.py -f train -r sac -m ff
-
-# 训练SAC + LSTM (6步历史)
-python main_script.py -f train -r sac -m lstm -hl 6
-
-# 训练SAC + LSTM (12步历史)
-python main_script.py -f train -r sac -m lstm -hl 12
-
-# 训练SAC + Transformer (6步历史)
-python main_script.py -f train -r sac -m trsf -hl 6
-
-# 训练TD3 + FeedForward
-python main_script.py -f train -r td3 -m ff
-
-# 训练TD3 + LSTM (6步历史)
-python main_script.py -f train -r td3 -m lstm -hl 6
-
-# 训练TD3 + Transformer (6步历史)
-python main_script.py -f train -r td3 -m trsf -hl 6
-```
-
-## 📊 实验结果
-
-### 生成的分析文件
-
-所有现代化分析结果都保存在 `evaluation_results/` 目录下：
-
-#### 📈 图表文件 (`evaluation_results/plots/`)
-- `training_plot.png` - 8种模型的完整训练对比图
-- `SAC_vs_TD3_comparison.png` - SAC vs TD3算法性能对比
-- `SAC_Architectures.png` - SAC不同架构性能对比
-- `TD3_Architectures.png` - TD3不同架构性能对比
-
-#### 📋 表格文件 (`evaluation_results/tables/`)
-- `performance_summary_YYYYMMDD_HHMMSS.csv` - 性能对比表格（CSV格式）
-- `performance_summary_YYYYMMDD_HHMMSS.md` - 性能对比报告（Markdown格式）
-
-#### 📹 视频文件 (`evaluation_results/videos/`)
-- **格式**: H264 MP4，50 FPS，yuv420p像素格式
-- **兼容性**: 可在VSCode中直接播放
-- **命名规则**: `{ModelName}_episode_{1|2}.mp4`
-
-### 🏆 性能对比结果
-
-根据最新实验结果（8个模型）：
-
-| 排名 | 模型 | 算法 | 架构 | 最终分数 | 最高分数 |
-|------|------|------|------|----------|----------|
-| 1 | SAC_Transformer-12 | SAC | Transformer | 303.6 | 309.3 |
-| 2 | TD3_LSTM-6 | TD3 | LSTM | 303.0 | 313.0 |
-| 3 | SAC_LSTM-12 | SAC | LSTM | 302.4 | 314.6 |
+| Rank | Model | Algorithm | Architecture | Final Score | Peak Score |
+|:----:|-------|:---------:|:------------:|:-----------:|:----------:|
+| 1 | SAC_Transformer-12 | SAC | Transformer | **303.6** | 309.3 |
+| 2 | TD3_LSTM-6 | TD3 | LSTM | **303.0** | 313.0 |
+| 3 | SAC_LSTM-12 | SAC | LSTM | **302.4** | 314.6 |
 | 4 | TD3_FeedForward | TD3 | FeedForward | 282.4 | 296.4 |
 | 5 | TD3_Transformer-6 | TD3 | Transformer | 276.9 | 303.6 |
 | 6 | SAC_FeedForward | SAC | FeedForward | 252.1 | 308.1 |
 | 7 | SAC_LSTM-6 | SAC | LSTM | 213.9 | 322.2 |
 | 8 | SAC_Transformer-6 | SAC | Transformer | 73.7 | 303.4 |
 
-### 🔍 关键发现
+### Key Findings
 
-1. **算法对比**: TD3算法平均表现更稳定 (287.5 ± 13.7)，SAC算法方差较大 (229.2 ± 94.7)
-2. **架构效果**: LSTM-12和Transformer-12架构表现最佳
-3. **时序建模**: 12步历史观察在LSTM架构中表现最好
-4. **训练稳定性**: TD3_LSTM-6收敛最快 (708 episodes)
+| Insight | Detail |
+|---------|--------|
+| **TD3 is more stable** | Avg 287.5 ± 13.7 vs SAC's 229.2 ± 94.7 |
+| **Temporal models shine** | Top 3 models all use sequence encoders (LSTM / Transformer) |
+| **History length matters** | 12-step history consistently outperforms 6-step for SAC |
+| **Fastest convergence** | TD3_LSTM-6 reached 300+ in only ~708 episodes |
 
-## 🔧 技术实现
+<details>
+<summary><b>View comparison charts</b></summary>
 
-### 核心算法特点
-- **SAC**: 结合最大熵强化学习，提高探索效率
-- **TD3**: 双Q网络和延迟更新，稳定训练过程
-- **优先级回放**: 基于TD-error的经验回放策略
+| SAC vs TD3 | SAC Architectures | TD3 Architectures |
+|:---:|:---:|:---:|
+| <img src="evaluation_results/plots/SAC_vs_TD3_comparison.png" width="280"> | <img src="evaluation_results/plots/SAC_Architectures.png" width="280"> | <img src="evaluation_results/plots/TD3_Architectures.png" width="280"> |
 
-### 现代化分析工具
-- **数据可视化**: matplotlib + seaborn 高级图表
-- **性能分析**: pandas 数据处理和统计分析
-- **视频生成**: FFmpeg H264编码，VSCode兼容
+</details>
 
-## 🔧 故障排除
+---
 
-### 常见问题
+## Neural Network Architectures
 
-1. **FFmpeg未找到错误**
-   ```bash
-   conda install -c conda-forge ffmpeg -y
-   ```
+This project implements a **plug-and-play architecture system** — each encoder can be combined with any RL algorithm:
 
-2. **Gymnasium版本问题**
-   ```bash
-   pip uninstall gym
-   pip install gymnasium
-   pip install Box2D
-   ```
+```
+Observation → [Encoder] → Latent → Actor (→ Action)
+                                  → Critic (→ Q-value)
+```
 
-3. **视频无法在VSCode中播放**
-   - 确保视频使用H264编码
-   - 检查像素格式是否为yuv420p
+| Architecture | Encoder | Temporal | Key Design Choice |
+|:------------:|---------|:--------:|-------------------|
+| **FeedForward** | Linear + Residual Block + LayerNorm + GELU | No | Residual connection for gradient flow |
+| **MLP** | Linear + LayerNorm + GELU (no residual) | No | Baseline without skip connections |
+| **LSTM** | Single-layer LSTM (hidden=96) | Yes | Bias init trick: `bias_hh = -0.2` for recency |
+| **BiLSTM** | Bidirectional LSTM (hidden=64×2) | Yes | Forward + backward temporal context |
+| **Transformer** | Pre-Norm Transformer + Sinusoidal PE | Yes | `only_last_state` attention for efficiency |
 
-4. **依赖包问题**
-   ```bash
-   pip install -r requirements.txt
-   ```
+**Custom Transformer design highlights:**
+- Pre-Norm (LayerNorm before attention) for stable training — following [Xiong et al., 2020](https://arxiv.org/abs/2002.04745)
+- Custom Multi-Head Attention with orthogonal weight init and identity output projection
+- Flipped sinusoidal positional encoding (`log(1000)` base) for recent-step emphasis
 
-## 📄 许可证
+---
 
-本项目采用MIT许可证 - 详见[LICENSE](LICENSE)文件
+## Quick Start
+
+### Installation
+
+```bash
+git clone https://github.com/<your-username>/BipedalWalker-V3.git
+cd BipedalWalker-V3
+pip install -r requirements.txt
+```
+
+<details>
+<summary><b>Core dependencies</b></summary>
+
+| Category | Packages |
+|----------|----------|
+| RL Framework | `gymnasium==0.28.1`, `Box2D`, `torch>=2.0` |
+| Visualization | `matplotlib`, `seaborn`, `Pillow` |
+| Data Analysis | `pandas`, `scipy` |
+| Video | `imageio`, `imageio-ffmpeg`, `FFmpeg` |
+
+</details>
+
+### Evaluate a Pretrained Model
+
+```bash
+# Test SAC + FeedForward
+python main_script.py -f test -r sac -m ff
+
+# Test TD3 + LSTM (6-step history)
+python main_script.py -f test -r td3 -m lstm -hl 6
+
+# Test with video recording
+python main_script.py -f test-record -r sac -m lstm -hl 12
+```
+
+### Generate Visualizations
+
+```bash
+# Training curves for all 8 models
+python scripts/visualization/simple_plot.py
+
+# Algorithm comparison charts
+python scripts/visualization/plot_results.py
+
+# Performance summary tables (CSV + Markdown)
+python scripts/visualization/generate_tables.py
+
+# Record demo videos for all models (H264 MP4, VSCode compatible)
+python scripts/visualization/record_original_wrappers_fixed.py
+```
+
+---
+
+## Training
+
+Train any algorithm × architecture combination with a single command:
+
+```bash
+# SAC + FeedForward
+python main_script.py -f train -r sac -m ff
+
+# SAC + LSTM (12-step history)
+python main_script.py -f train -r sac -m lstm -hl 12
+
+# TD3 + Transformer (6-step history)
+python main_script.py -f train -r td3 -m trsf -hl 6
+
+# SAC + BiLSTM (12-step history)
+python main_script.py -f train -r sac -m bilstm -hl 12
+```
+
+**Full parameter reference:**
+
+| Flag | Options | Default | Description |
+|------|---------|---------|-------------|
+| `-r` | `sac`, `td3`, `ddpg` | `sac` | RL algorithm |
+| `-m` | `ff`, `mlp`, `lstm`, `bilstm`, `trsf` | `ff` | Network architecture |
+| `-hl` | `6`, `12` | `12` | History length (for sequential models) |
+| `-e` | `classic`, `hardcore` | `hardcore` | Environment difficulty |
+| `-l` | float | `4e-4` | Learning rate |
+| `-b` | int | `64` | Batch size |
+| `-g` | float | `0.98` | Discount factor γ |
+| `-a` | float | `0.01` | SAC entropy coefficient α |
+
+Models are saved every 200 episodes to `models/{algorithm}/{env_type}/`.
+
+---
+
+## Project Structure
+
+```
+BipedalWalker-V3/
+│
+├── main_script.py                 # Main entry point (train / test / record)
+├── requirements.txt               # Dependencies
+│
+├── src/                           # Core library
+│   ├── agents/                    # RL agents
+│   │   ├── sac_agent.py           #   Soft Actor-Critic (dual critics + entropy)
+│   │   ├── td3_agent.py           #   Twin Delayed DDPG (delayed update + target noise)
+│   │   └── ddpg_agent.py          #   Deep Deterministic PG (baseline)
+│   ├── architectures/             # Neural network encoders
+│   │   ├── feedforward.py         #   Residual FeedForward
+│   │   ├── mlp.py                 #   Standard MLP
+│   │   ├── lstm.py                #   Unidirectional LSTM
+│   │   ├── bilstm.py              #   Bidirectional LSTM
+│   │   └── transformer.py         #   Pre-Norm Transformer
+│   ├── utils/                     # Utilities
+│   │   ├── env_wrappers.py        #   Frame-skip + history observation wrappers
+│   │   ├── noise.py               #   OU / Gaussian / Decaying noise generators
+│   │   └── replay_buffer.py       #   Experience replay buffer
+│   ├── training.py                # Training loop (8000 episodes, auto-stop at 300+)
+│   └── evaluation.py              # Evaluation and plotting
+│
+├── archs/utils/                   # Low-level Transformer components
+│   ├── mha.py                     #   Custom Multi-Head Attention
+│   └── transformer.py             #   Positional Encoding + Transformer Layer
+│
+├── configs/                       # YAML configuration files
+│   ├── env_config.yaml
+│   ├── sac_config.yaml
+│   └── td3_config.yaml
+│
+├── scripts/                       # Utility scripts
+│   ├── train.py                   #   Enhanced training wrapper
+│   └── visualization/             #   Plot, table, and video generation
+│
+├── models/                        # Pretrained checkpoints (.pth, git-ignored)
+├── results/                       # Raw training logs and plots
+├── evaluation_results/            # Generated evaluation outputs
+│   ├── plots/                     #   Comparison charts
+│   ├── tables/                    #   CSV + Markdown performance tables
+│   ├── reports/                   #   Analysis reports
+│   └── videos/                    #   H264 MP4 demo videos
+│
+└── docs/                          # Technical documentation
+    ├── algorithm_comparison.md    #   SAC vs TD3 vs DDPG analysis
+    └── architecture_design.md    #   Network architecture details
+```
+
+---
+
+## Algorithm Details
+
+### SAC (Soft Actor-Critic)
+
+Maximum entropy RL — optimizes expected return **plus** policy entropy:
+
+$$J(\pi) = \sum_t \mathbb{E}\left[\gamma^t r(s_t, a_t) + \alpha \gamma^t \mathcal{H}(\pi(\cdot|s_t))\right]$$
+
+- **Stochastic policy** via tanh-Gaussian distribution
+- **Dual critic** networks with min-Q target
+- **Automatic entropy tuning** (α = 0.01)
+
+### TD3 (Twin Delayed DDPG)
+
+Three key improvements over DDPG:
+
+1. **Clipped Double-Q**: `Q_target = min(Q₁, Q₂)` to reduce overestimation
+2. **Delayed Policy Update**: Actor updates every 2 critic updates
+3. **Target Policy Smoothing**: Add clipped Gaussian noise to target actions
+
+### Exploration Strategies
+
+| Algorithm | Exploration Noise |
+|:---------:|-------------------|
+| SAC | Entropy-based (no explicit noise) |
+| TD3 | Decaying Ornstein-Uhlenbeck (θ=4.0, σ=1.2, decay=0.9995) |
+| DDPG | Ornstein-Uhlenbeck (θ=3.0, σ=0.9) |
+
+### Shared Hyperparameters
+
+| Parameter | Value |
+|-----------|-------|
+| Learning rate | 4×10⁻⁴ |
+| Discount factor (γ) | 0.98 |
+| Soft update (τ) | 0.01 |
+| Batch size | 64 |
+| Replay buffer | 500K |
+| Optimizer | AdamW (amsgrad=True) |
+| Max episodes | 8,000 |
+| Frame skip | 2 |
+
+---
+
+## Environment Wrappers
+
+Two custom Gymnasium wrappers are applied:
+
+| Wrapper | Purpose |
+|---------|---------|
+| `MyWalkerWrapper` | Frame-skip (2×), death penalty (−10), Gymnasium API compatibility |
+| `BoxToHistoryBox` | Stacks last *h* observations into shape `(h, 24)` for sequence models |
+
+---
+
+## Documentation
+
+| Document | Description |
+|----------|-------------|
+| [`docs/algorithm_comparison.md`](docs/algorithm_comparison.md) | Detailed SAC vs TD3 vs DDPG analysis with math |
+| [`docs/architecture_design.md`](docs/architecture_design.md) | All 5 architecture designs with formulas |
+| [`evaluation_results/reports/`](evaluation_results/reports/) | Model performance evaluation report |
+| [`evaluation_results/tables/`](evaluation_results/tables/) | Performance ranking tables (CSV + Markdown) |
+
+---
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| `FFmpeg not found` | `conda install -c conda-forge ffmpeg -y` |
+| `gymnasium` import error | `pip uninstall gym && pip install gymnasium Box2D` |
+| Video won't play in VSCode | Ensure H264 codec + yuv420p pixel format |
+| CUDA out of memory | Add `-d cpu` to use CPU |
+
+---
+
+## Citation
+
+If you use this codebase in your research, please consider citing:
+
+```bibtex
+@misc{bipedalwalker-v3,
+  title   = {BipedalWalker-V3: Deep RL Benchmark with Temporal Architectures},
+  year    = {2025},
+  url     = {https://github.com/LinHao-city/BipedalWalker-V3}
+}
+```
+
+## References
+
+- [Haarnoja et al., 2018 — Soft Actor-Critic](https://arxiv.org/abs/1812.05905)
+- [Fujimoto et al., 2018 — TD3](https://arxiv.org/abs/1802.09477)
+- [Lillicrap et al., 2015 — DDPG](https://arxiv.org/abs/1509.02971)
+- [Vaswani et al., 2017 — Attention Is All You Need](https://arxiv.org/abs/1706.03762)
+- [Xiong et al., 2020 — On Layer Normalization in Transformer](https://arxiv.org/abs/2002.04745)
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
