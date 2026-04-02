@@ -136,6 +136,88 @@ Each architecture handles obstacles differently. The images below compare **Feed
 </tr>
 </table>
 
+### Evaluation Videos (Latest Results)
+
+The following videos were recorded using the **latest Gymnasium environment** with the best checkpoints. Each model runs 2 episodes on BipedalWalkerHardcore-v3 (H264 MP4, 50 FPS).
+
+> Videos are located at `evaluation_results/videos/real_bipedalwalker_all/`. GitHub does not render MP4 inline — clone the repo and open them locally, or click the links below to download.
+
+<table>
+<tr>
+<th>Model</th>
+<th>Score</th>
+<th>Episode 1</th>
+<th>Episode 2</th>
+<th>Behavior Analysis</th>
+</tr>
+<tr>
+<td><b>SAC + LSTM-12</b></td>
+<td>302.4</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_LSTM-12/SAC_LSTM-12_episode_1.mp4">▶ Ep1</a> (223 KB)</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_LSTM-12/SAC_LSTM-12_episode_2.mp4">▶ Ep2</a> (190 KB)</td>
+<td>Smooth, stable gait. Navigates all terrain types consistently. Longest episode duration across all models.</td>
+</tr>
+<tr>
+<td><b>SAC + Transformer-12</b></td>
+<td>303.6</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_Transformer-12/SAC_Transformer-12_episode_1.mp4">▶ Ep1</a> (100 KB)</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_Transformer-12/SAC_Transformer-12_episode_2.mp4">▶ Ep2</a> (37 KB)</td>
+<td>High training score but <b>inconsistent at evaluation</b> — Ep2 terminates early (37 KB). Sensitive to terrain randomization.</td>
+</tr>
+<tr>
+<td><b>TD3 + LSTM-6</b></td>
+<td>303.0</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/TD3_LSTM-6/TD3_LSTM-6_episode_1.mp4">▶ Ep1</a> (176 KB)</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/TD3_LSTM-6/TD3_LSTM-6_episode_2.mp4">▶ Ep2</a> (177 KB)</td>
+<td>Very consistent — both episodes nearly identical length. Deterministic policy shows reliable repeatability.</td>
+</tr>
+<tr>
+<td><b>TD3 + Transformer-6</b></td>
+<td>276.9</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/TD3_Transformer-6/TD3_Transformer-6_episode_1.mp4">▶ Ep1</a> (194 KB)</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/TD3_Transformer-6/TD3_Transformer-6_episode_2.mp4">▶ Ep2</a> (191 KB)</td>
+<td>Long episodes with good terrain coverage. Slightly less efficient locomotion than LSTM variant.</td>
+</tr>
+<tr>
+<td><b>SAC + LSTM-6</b></td>
+<td>213.9</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_LSTM-6/SAC_LSTM-6_episode_1.mp4">▶ Ep1</a> (182 KB)</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_LSTM-6/SAC_LSTM-6_episode_2.mp4">▶ Ep2</a> (167 KB)</td>
+<td>Decent walking but inefficient energy use. 6-step history insufficient for SAC's stochastic policy.</td>
+</tr>
+<tr>
+<td><b>SAC + Transformer-6</b></td>
+<td>73.7</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_Transformer-6/SAC_Transformer-6_episode_1.mp4">▶ Ep1</a> (197 KB)</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_Transformer-6/SAC_Transformer-6_episode_2.mp4">▶ Ep2</a> (183 KB)</td>
+<td>Long episodes but low reward — agent walks but struggles with obstacles. Underfitting with short history.</td>
+</tr>
+<tr>
+<td><b>SAC + FeedForward</b></td>
+<td>252.1</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_FeedForward/SAC_FeedForward_episode_1.mp4">▶ Ep1</a> (182 KB)</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/SAC_FeedForward/SAC_FeedForward_episode_2.mp4">▶ Ep2</a> (194 KB)</td>
+<td>Reasonable performance without memory. Reactive gait — no terrain anticipation ability.</td>
+</tr>
+<tr>
+<td><b>TD3 + FeedForward</b></td>
+<td>282.4</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/TD3_FeedForward/TD3_FeedForward_episode_1.mp4">▶ Ep1</a> (78 KB)</td>
+<td><a href="evaluation_results/videos/real_bipedalwalker_all/TD3_FeedForward/TD3_FeedForward_episode_2.mp4">▶ Ep2</a> (77 KB)</td>
+<td>Short episodes — agent walks <b>fast</b> and finishes quickly. Efficient but fragile on complex terrain.</td>
+</tr>
+</table>
+
+#### Insights from Evaluation Videos
+
+| Observation | Evidence |
+|-------------|----------|
+| **LSTM-12 is the most robust** | SAC_LSTM-12 has the largest video files (223 KB), indicating longest survival and consistent traversal |
+| **TD3 produces more consistent behavior** | TD3_LSTM-6 Ep1 (176 KB) ≈ Ep2 (177 KB) — deterministic policy yields near-identical runs |
+| **Transformer-12 is high-risk high-reward** | Top training score (303.6) but Ep2 only 37 KB — fails early on some terrain seeds |
+| **FeedForward + TD3 = fast but short** | Both episodes ~78 KB — agent completes quickly but lacks robustness for complex obstacles |
+| **6-step history is insufficient for SAC** | SAC_Transformer-6 achieves only 73.7 despite long episodes — walking but not solving obstacles |
+
 ### Environment Overview
 
 <table>
